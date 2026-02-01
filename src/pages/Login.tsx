@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useStore } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { Zap } from 'lucide-react'
 
 export function LoginPage() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('admin@acme.com')
   const [password, setPassword] = useState('password')
   const [error, setError] = useState('')
@@ -21,27 +24,30 @@ export function LoginPage() {
     if (success) {
       navigate('/')
     } else {
-      setError('Invalid credentials. Try admin@acme.com, manager@acme.com, or viewer@acme.com')
+      setError(t('auth.invalidCredentials'))
     }
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Zap size={28} className="text-primary" />
-            <span className="text-2xl font-bold">Admin Panel</span>
+            <span className="text-2xl font-bold">{t('auth.adminPanel')}</span>
           </div>
-          <CardTitle className="text-xl">Sign In</CardTitle>
+          <CardTitle className="text-xl">{t('auth.signIn')}</CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin panel
+            {t('auth.enterCredentials')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -51,7 +57,7 @@ export function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -64,14 +70,14 @@ export function LoginPage() {
               <p className="text-sm text-destructive">{error}</p>
             )}
             <Button type="submit" className="w-full">
-              Sign In
+              {t('auth.signIn')}
             </Button>
             <div className="mt-4 rounded-md bg-muted p-3 text-xs text-muted-foreground space-y-1">
-              <p className="font-medium text-foreground">Demo Accounts:</p>
-              <p><strong>Admin:</strong> admin@acme.com</p>
-              <p><strong>Manager:</strong> manager@acme.com</p>
-              <p><strong>Viewer:</strong> viewer@acme.com</p>
-              <p className="italic">Password: anything</p>
+              <p className="font-medium text-foreground">{t('auth.demoAccounts')}:</p>
+              <p><strong>{t('auth.admin')}:</strong> admin@acme.com</p>
+              <p><strong>{t('auth.manager')}:</strong> manager@acme.com</p>
+              <p><strong>{t('auth.viewer')}:</strong> viewer@acme.com</p>
+              <p className="italic">{t('auth.anyPassword')}</p>
             </div>
           </form>
         </CardContent>

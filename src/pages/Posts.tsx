@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetBody, SheetFooter, SheetTitle } from '@/components/ui/sheet'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Plus, MoreHorizontal, Pencil, Trash2, ArchiveRestore } from 'lucide-react'
@@ -102,8 +102,12 @@ export function PostsPage() {
         )}
       />
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="overflow-y-auto"><SheetHeader><SheetTitle>{editingItem ? 'Edit Post' : 'New Post'}</SheetTitle><SheetDescription>Manage blog post content</SheetDescription></SheetHeader>
-          <div className="grid gap-4 py-4">
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{editingItem ? 'Edit Post' : 'New Post'}</SheetTitle>
+            <SheetDescription>Manage blog post content</SheetDescription>
+          </SheetHeader>
+          <SheetBody className="grid gap-4">
             <div className="space-y-2"><Label>Title</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
             <div className="space-y-2"><Label>Slug</Label><Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="auto-generated" /></div>
             <div className="space-y-2"><Label>Excerpt</Label><Textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} rows={2} /></div>
@@ -116,8 +120,10 @@ export function PostsPage() {
                 <SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="draft">Draft</SelectItem><SelectItem value="published">Published</SelectItem><SelectItem value="archived">Archived</SelectItem></SelectContent>
               </Select>
             </div>
-            <Button onClick={handleSave} className="mt-2">{editingItem ? 'Save Changes' : 'Create Post'}</Button>
-          </div>
+          </SheetBody>
+          <SheetFooter>
+            <Button onClick={handleSave} className="w-full">{editingItem ? 'Save Changes' : 'Create Post'}</Button>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
       <ConfirmDialog open={confirm.open} title={confirm.title} description={confirm.description} onConfirm={confirm.handleConfirm} onCancel={confirm.handleClose} confirmLabel="Delete" />

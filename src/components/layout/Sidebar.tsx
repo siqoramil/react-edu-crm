@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useStore } from '@/store'
 import { can } from '@/lib/permissions'
 import { cn } from '@/lib/utils'
@@ -13,7 +14,7 @@ import {
 import {
   LayoutDashboard, Users, Package, ShoppingCart, LifeBuoy,
   FolderTree, FileText, Image, Settings, BarChart3,
-  Shield, ScrollText, Flag, Wrench, MonitorSmartphone,
+  Shield,
   ChevronsLeft, ChevronsRight, ChevronDown,
   Zap,
 } from 'lucide-react'
@@ -21,44 +22,45 @@ import { useState } from 'react'
 import type { Permission } from '@/types'
 
 interface NavItem {
-  label: string
+  labelKey: string
   icon: React.ReactNode
   href?: string
   permission?: Permission
-  children?: { label: string; href: string; permission?: Permission }[]
+  children?: { labelKey: string; href: string; permission?: Permission }[]
 }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', icon: <LayoutDashboard size={20} />, href: '/' },
-  { label: 'Users', icon: <Users size={20} />, href: '/users', permission: 'users.view' },
-  { label: 'Products', icon: <Package size={20} />, href: '/products', permission: 'products.view' },
-  { label: 'Orders', icon: <ShoppingCart size={20} />, href: '/orders', permission: 'orders.view' },
-  { label: 'Tickets', icon: <LifeBuoy size={20} />, href: '/tickets', permission: 'tickets.view' },
-  { label: 'Categories', icon: <FolderTree size={20} />, href: '/categories', permission: 'categories.view' },
-  { label: 'Blog Posts', icon: <FileText size={20} />, href: '/posts', permission: 'posts.view' },
-  { label: 'Media', icon: <Image size={20} />, href: '/media', permission: 'media.view' },
+  { labelKey: 'nav.dashboard', icon: <LayoutDashboard size={20} />, href: '/' },
+  { labelKey: 'nav.users', icon: <Users size={20} />, href: '/users', permission: 'users.view' },
+  { labelKey: 'nav.products', icon: <Package size={20} />, href: '/products', permission: 'products.view' },
+  { labelKey: 'nav.orders', icon: <ShoppingCart size={20} />, href: '/orders', permission: 'orders.view' },
+  { labelKey: 'nav.tickets', icon: <LifeBuoy size={20} />, href: '/tickets', permission: 'tickets.view' },
+  { labelKey: 'nav.categories', icon: <FolderTree size={20} />, href: '/categories', permission: 'categories.view' },
+  { labelKey: 'nav.blogPosts', icon: <FileText size={20} />, href: '/posts', permission: 'posts.view' },
+  { labelKey: 'nav.media', icon: <Image size={20} />, href: '/media', permission: 'media.view' },
   {
-    label: 'Reports', icon: <BarChart3 size={20} />, permission: 'reports.view',
+    labelKey: 'nav.reports', icon: <BarChart3 size={20} />, permission: 'reports.view',
     children: [
-      { label: 'Revenue', href: '/reports/revenue' },
-      { label: 'User Growth', href: '/reports/user-growth' },
-      { label: 'Products', href: '/reports/products' },
-      { label: 'Ticket SLA', href: '/reports/ticket-sla' },
+      { labelKey: 'nav.revenue', href: '/reports/revenue' },
+      { labelKey: 'nav.userGrowth', href: '/reports/user-growth' },
+      { labelKey: 'nav.products', href: '/reports/products' },
+      { labelKey: 'nav.ticketSla', href: '/reports/ticket-sla' },
     ],
   },
   {
-    label: 'Admin', icon: <Shield size={20} />, permission: 'admin.roles',
+    labelKey: 'nav.admin', icon: <Shield size={20} />, permission: 'admin.roles',
     children: [
-      { label: 'Roles & Permissions', href: '/admin/roles', permission: 'admin.roles' },
-      { label: 'System Logs', href: '/admin/logs', permission: 'admin.logs' },
-      { label: 'Feature Flags', href: '/admin/features', permission: 'admin.features' },
-      { label: 'Sessions', href: '/admin/sessions', permission: 'admin.sessions' },
+      { labelKey: 'nav.rolesPermissions', href: '/admin/roles', permission: 'admin.roles' },
+      { labelKey: 'nav.systemLogs', href: '/admin/logs', permission: 'admin.logs' },
+      { labelKey: 'nav.featureFlags', href: '/admin/features', permission: 'admin.features' },
+      { labelKey: 'nav.sessions', href: '/admin/sessions', permission: 'admin.sessions' },
     ],
   },
-  { label: 'Settings', icon: <Settings size={20} />, href: '/settings', permission: 'settings.view' },
+  { labelKey: 'nav.settings', icon: <Settings size={20} />, href: '/settings', permission: 'settings.view' },
 ]
 
 export function Sidebar() {
+  const { t } = useTranslation()
   const { pathname } = useLocation()
   const user = useStore((s) => s.user)
   const collapsed = useStore((s) => s.sidebarCollapsed)
@@ -98,11 +100,12 @@ export function Sidebar() {
             if (item.children) {
               return (
                 <CollapsibleNav
-                  key={item.label}
+                  key={item.labelKey}
                   item={item}
                   pathname={pathname}
                   collapsed={collapsed}
                   userRole={user.role}
+                  t={t}
                 />
               )
             }
@@ -112,7 +115,7 @@ export function Sidebar() {
               : pathname.startsWith(item.href!)
 
             return (
-              <Link key={item.label} to={item.href!}>
+              <Link key={item.labelKey} to={item.href!}>
                 <span
                   className={cn(
                     'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -121,10 +124,10 @@ export function Sidebar() {
                       : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground',
                     collapsed && 'justify-center px-0',
                   )}
-                  title={collapsed ? item.label : undefined}
+                  title={collapsed ? t(item.labelKey) : undefined}
                 >
                   {item.icon}
-                  {!collapsed && item.label}
+                  {!collapsed && t(item.labelKey)}
                 </span>
               </Link>
             )
@@ -152,12 +155,13 @@ export function Sidebar() {
 }
 
 function CollapsibleNav({
-  item, pathname, collapsed, userRole,
+  item, pathname, collapsed, userRole, t,
 }: {
   item: NavItem
   pathname: string
   collapsed: boolean
   userRole: string
+  t: (key: string) => string
 }) {
   const isChildActive = item.children?.some((c) => pathname.startsWith(c.href))
   const [open, setOpen] = useState(isChildActive)
@@ -176,7 +180,7 @@ function CollapsibleNav({
               ? 'bg-sidebar-accent text-sidebar-accent-foreground'
               : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50',
           )}
-          title={item.label}
+          title={t(item.labelKey)}
         >
           {item.icon}
         </span>
@@ -196,7 +200,7 @@ function CollapsibleNav({
           )}
         >
           {item.icon}
-          <span className="flex-1 text-left">{item.label}</span>
+          <span className="flex-1 text-left">{t(item.labelKey)}</span>
           <ChevronDown
             size={14}
             className={cn('transition-transform', open && 'rotate-180')}
@@ -218,7 +222,7 @@ function CollapsibleNav({
                       : 'text-sidebar-foreground/60 hover:text-sidebar-accent-foreground',
                   )}
                 >
-                  {child.label}
+                  {t(child.labelKey)}
                 </span>
               </Link>
             )

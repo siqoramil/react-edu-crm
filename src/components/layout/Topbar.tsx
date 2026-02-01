@@ -1,5 +1,6 @@
 import { useStore } from '@/store'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -12,12 +13,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import {
   Bell, Sun, Moon, LogOut, Search, User, X, CheckCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function Topbar() {
+  const { t } = useTranslation()
   const user = useStore((s) => s.user)
   const theme = useStore((s) => s.theme)
   const toggleTheme = useStore((s) => s.toggleTheme)
@@ -37,7 +40,7 @@ export function Topbar() {
       <div className="relative flex-1 max-w-md">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Search across all modules..."
+          placeholder={t('topbar.searchPlaceholder')}
           value={globalSearch}
           onChange={(e) => setGlobalSearch(e.target.value)}
           className="pl-9 h-9"
@@ -55,6 +58,9 @@ export function Topbar() {
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Language Switcher */}
+        <LanguageSwitcher />
+
         {/* Theme toggle */}
         <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleTheme}>
           {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
@@ -74,7 +80,7 @@ export function Topbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
             <DropdownMenuLabel className="flex items-center justify-between">
-              Notifications
+              {t('topbar.notifications')}
               {unread > 0 && (
                 <Button
                   variant="ghost"
@@ -86,7 +92,7 @@ export function Topbar() {
                   }}
                 >
                   <CheckCheck size={14} className="mr-1" />
-                  Mark all read
+                  {t('topbar.markAllRead')}
                 </Button>
               )}
             </DropdownMenuLabel>
@@ -94,7 +100,7 @@ export function Topbar() {
             <ScrollArea className="max-h-72">
               {notifications.length === 0 ? (
                 <div className="px-3 py-6 text-center text-sm text-muted-foreground">
-                  No notifications
+                  {t('topbar.noNotifications')}
                 </div>
               ) : (
                 notifications.slice(0, 10).map((n) => (
@@ -142,12 +148,12 @@ export function Topbar() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate('/settings')}>
-              Settings
+              {t('nav.settings')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => { logout(); navigate('/login') }}>
               <LogOut size={14} className="mr-2" />
-              Logout
+              {t('auth.signOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

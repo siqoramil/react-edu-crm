@@ -6,7 +6,9 @@
       "Bash(npx shadcn@latest init --defaults --yes)",
       "Bash(npx tsc:*)",
       "Bash(npx vite build:*)",
-      "Bash(timeout 10 npx vite:*)"
+      "Bash(timeout 10 npx vite:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle,
+  Sheet, SheetContent, SheetDescription, SheetHeader, SheetBody, SheetFooter, SheetTitle,
 } from '@/components/ui/sheet'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -116,16 +116,22 @@ export function OrdersPage() {
         )}
       />
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="overflow-y-auto"><SheetHeader><SheetTitle>{editingItem ? 'Edit Order' : 'Create Order'}</SheetTitle><SheetDescription>Manage order details</SheetDescription></SheetHeader>
-          <div className="grid gap-4 py-4">
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{editingItem ? 'Edit Order' : 'Create Order'}</SheetTitle>
+            <SheetDescription>Manage order details</SheetDescription>
+          </SheetHeader>
+          <SheetBody className="grid gap-4">
             <div className="space-y-2"><Label>Customer Name</Label><Input value={form.customer} onChange={(e) => setForm({ ...form, customer: e.target.value })} /></div>
             <div className="space-y-2"><Label>Customer Email</Label><Input type="email" value={form.customerEmail} onChange={(e) => setForm({ ...form, customerEmail: e.target.value })} /></div>
             <div className="space-y-2"><Label>Total</Label><Input type="number" value={form.total} onChange={(e) => setForm({ ...form, total: Number(e.target.value) })} /></div>
             <div className="space-y-2"><Label>Shipping Address</Label><Input value={form.shippingAddress} onChange={(e) => setForm({ ...form, shippingAddress: e.target.value })} /></div>
             <div className="space-y-2"><Label>Status</Label><Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as Order['status'] })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['pending','processing','shipped','delivered','cancelled'].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
             <div className="space-y-2"><Label>Payment</Label><Select value={form.paymentStatus} onValueChange={(v) => setForm({ ...form, paymentStatus: v as Order['paymentStatus'] })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['paid','unpaid','refunded'].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
-            <Button onClick={handleSave} className="mt-2">{editingItem ? 'Save Changes' : 'Create Order'}</Button>
-          </div>
+          </SheetBody>
+          <SheetFooter>
+            <Button onClick={handleSave} className="w-full">{editingItem ? 'Save Changes' : 'Create Order'}</Button>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
       <ConfirmDialog open={confirm.open} title={confirm.title} description={confirm.description} onConfirm={confirm.handleConfirm} onCancel={confirm.handleClose} confirmLabel="Delete" />

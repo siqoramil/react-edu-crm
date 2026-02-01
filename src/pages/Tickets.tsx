@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetBody, SheetFooter, SheetTitle } from '@/components/ui/sheet'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Plus, MoreHorizontal, Pencil, Trash2, ArchiveRestore } from 'lucide-react'
@@ -107,8 +107,12 @@ export function TicketsPage() {
         )}
       />
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="overflow-y-auto"><SheetHeader><SheetTitle>{editingItem ? 'Edit Ticket' : 'New Ticket'}</SheetTitle><SheetDescription>Manage ticket details</SheetDescription></SheetHeader>
-          <div className="grid gap-4 py-4">
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{editingItem ? 'Edit Ticket' : 'New Ticket'}</SheetTitle>
+            <SheetDescription>Manage ticket details</SheetDescription>
+          </SheetHeader>
+          <SheetBody className="grid gap-4">
             <div className="space-y-2"><Label>Subject</Label><Input value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} /></div>
             <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
             <div className="space-y-2"><Label>Customer</Label><Input value={form.customer} onChange={(e) => setForm({ ...form, customer: e.target.value })} /></div>
@@ -117,8 +121,10 @@ export function TicketsPage() {
             <div className="space-y-2"><Label>Category</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
             <div className="space-y-2"><Label>Priority</Label><Select value={form.priority} onValueChange={(v) => setForm({ ...form, priority: v as Ticket['priority'] })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['low','medium','high','critical'].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
             <div className="space-y-2"><Label>Status</Label><Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as Ticket['status'] })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['open','in_progress','resolved','closed'].map((s) => <SelectItem key={s} value={s}>{s.replace('_', ' ')}</SelectItem>)}</SelectContent></Select></div>
-            <Button onClick={handleSave} className="mt-2">{editingItem ? 'Save Changes' : 'Create Ticket'}</Button>
-          </div>
+          </SheetBody>
+          <SheetFooter>
+            <Button onClick={handleSave} className="w-full">{editingItem ? 'Save Changes' : 'Create Ticket'}</Button>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
       <ConfirmDialog open={confirm.open} title={confirm.title} description={confirm.description} onConfirm={confirm.handleConfirm} onCancel={confirm.handleClose} confirmLabel="Delete" />

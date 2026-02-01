@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Sheet, SheetContent, SheetDescription,
-  SheetHeader, SheetTitle,
+  SheetHeader, SheetBody, SheetFooter, SheetTitle,
 } from '@/components/ui/sheet'
 import {
   Select, SelectContent, SelectItem,
@@ -232,14 +232,14 @@ export function UsersPage() {
 
       {/* Create/Edit Sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="overflow-y-auto">
+        <SheetContent>
           <SheetHeader>
             <SheetTitle>{editingUser ? 'Edit User' : 'Create User'}</SheetTitle>
             <SheetDescription>
               {editingUser ? 'Update user information' : 'Add a new user to the system'}
             </SheetDescription>
           </SheetHeader>
-          <div className="grid gap-4 py-4">
+          <SheetBody className="grid gap-4">
             <div className="space-y-2">
               <Label>Name</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -281,10 +281,12 @@ export function UsersPage() {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleSave} className="mt-2">
+          </SheetBody>
+          <SheetFooter>
+            <Button onClick={handleSave} className="w-full">
               {editingUser ? 'Save Changes' : 'Create User'}
             </Button>
-          </div>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
 
